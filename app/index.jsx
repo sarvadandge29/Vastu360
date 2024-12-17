@@ -1,19 +1,37 @@
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native'
-import React from 'react'
-import { router } from 'expo-router'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import React from "react";
+import { View, Text, Image, StatusBar } from "react-native";
+import CustomButton from "../components/CustomButton";
+import images from "../constants/images";
+import { router } from "expo-router";
 
 const Index = () => {
   return (
-    <GestureHandlerRootView className="flex-1">
-      <SafeAreaView className="flex-1">
-        <View className="flex-1 items-center justify-center">
-          <Text>Index</Text>
-        </View>
-        <StatusBar backgroundColor="#000" barStyle="light"/>
-      </SafeAreaView>
-    </GestureHandlerRootView>
-  )
-}
+    <View className="flex-1 bg-white">
+      <View className="flex-1 justify-center items-center bg-white">
+        <Image source={images.homeImage} />
+      </View>
 
-export default Index
+      <View className="flex-1 bg-primary rounded-t-3xl p-6 -mt-10">
+        <View className="items-center">
+          <Text className="text-white text-3xl font-bold text-center">
+            Welcome to the Vastu360
+          </Text>
+          
+          <Text className="text-gray-200 text-center my-20 text-xl">
+            Manage and track your property updates with ease and efficiency.
+          </Text>
+          
+          <CustomButton
+            title="Continue With Email"
+            style="bg-white h-14"
+            textStyle="text-lg text-primary"
+            onPress={() => router.push("/login")}
+          />
+          <StatusBar backgroundColor="#2D487A" barStyle="light-content"/>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default Index;
