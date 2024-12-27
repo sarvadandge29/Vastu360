@@ -1,29 +1,97 @@
-import { View, Text, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
+import { supabase } from '../../lib/superbase';
 
-
-const SignUpAsBulider = () => {
+const SignUpAsBuilder = () => {
   const [form, setForm] = useState({
     name: '',
     phoneNumber: '',
     email: '',
-    nameOfCompany:'',
-    password : '',
+    nameOfCompany: '',
+    password: '',
   });
+
+  const [loading, setLoading] = useState(false);
+
+  const resetForm = () => {
+    setForm({
+      name: '',
+      phoneNumber: '',
+      email: '',
+      nameOfCompany: '',
+      password: '',
+    });
+  };
+
+  const validateForm = () => {
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!form.email || !form.password || !form.name || !form.phoneNumber || !form.nameOfCompany) {
+      Alert.alert('Error', 'Please fill in all required fields.');
+      return false;
+    }
+
+    if (!phoneRegex.test(form.phoneNumber)) {
+      Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSignUp = async () => {
+    if (!validateForm()) return;
+
+    setLoading(true);
+
+    try {
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (authError) {
+        Alert.alert('Sign-Up Failed', authError.message);
+        return;
+      }
+
+      const userId = authData?.user?.id;
+
+      const { error: dbError } = await supabase.from('builder').insert([
+        {
+          user_id: userId,
+          name: form.name,
+          phone_number: form.phoneNumber,
+          email: form.email,
+          name_of_company: form.nameOfCompany,
+        },
+      ]);
+
+      if (dbError) {
+        Alert.alert('Error', 'Failed to save builder details: ' + dbError.message);
+        return;
+      }
+
+      Alert.alert('Success', 'Account created successfully! Please check your email to verify your account.');
+      router.push("/login");
+      resetForm();
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView className="bg-primary h-full">
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <View className="w-full justify-center flex-1 px-4 my-6 bg-white" style={{ borderBottomColor: "#000" }}>
-
-            <Text className="text-secondary text-2xl font-semibold ">
-              Sign Up To Vastu360 As Bulider
-            </Text>
+          <View className="w-full justify-center flex-1 px-4 my-6 bg-white">
+            <Text className="text-secondary text-2xl font-semibold">Sign Up To Vastu360 As Builder</Text>
 
             <FormField
               title="Name"
@@ -41,7 +109,7 @@ const SignUpAsBulider = () => {
               otherStyles="mt-6"
               keyboardType="phone-pad"
               textStyle="text-base text-gray-500 font-medium"
-              placeholder="Enter Your Phone Number of 10 digit"
+              placeholder="Enter Your 10-digit Phone Number"
             />
 
             <FormField
@@ -54,17 +122,14 @@ const SignUpAsBulider = () => {
               placeholder="Enter Your Email"
             />
 
-
             <FormField
               title="Name Of Company"
               value={form.nameOfCompany}
-              handleChangeText={(e) => setForm({ ...form, nameOfSite: e })}
+              handleChangeText={(e) => setForm({ ...form, nameOfCompany: e })}
               otherStyles="mt-6"
               textStyle="text-base text-gray-500 font-medium"
-              placeholder="Enter Your Site Name"
+              placeholder="Enter Your Company Name"
             />
-            {/*onclick on Name Of Company the all Name Of Company should pop same*/}
-            
 
             <FormField
               title="Password"
@@ -76,16 +141,18 @@ const SignUpAsBulider = () => {
             />
 
             <CustomButton
-              title="Sign Up As Builder"
+              title={loading ? 'Signing Up...' : 'Sign Up As Builder'}
               containerStyle="bg-secondary rounded-full mt-5 h-12"
               textStyle="text-lg text-white"
+              onPress={handleSignUp}
+              disable={loading}
             />
 
             <View className="justify-center pt-5 flex-row gap-2">
               <Text className="text-lg font-regular text-gray-500">
                 Sign Up As Customer?{' '}
                 <Link className="text-secondary-100 text-lg font-semibold" href="/sign-up-as-customer">
-                  SignUp
+                  Sign Up
                 </Link>
               </Text>
             </View>
@@ -98,7 +165,6 @@ const SignUpAsBulider = () => {
                 </Link>
               </Text>
             </View>
-
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -106,5 +172,4 @@ const SignUpAsBulider = () => {
   );
 };
 
-
-export default SignUpAsBulider
+export default SignUpAsBuilder;

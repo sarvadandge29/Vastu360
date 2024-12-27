@@ -20,18 +20,38 @@ const SignUpAsCustomer = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const validatePhoneNumber = (phoneNumber) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phoneNumber);
+  };
+
+  const resetForm = () =>{
+    setForm({
+      name: '',
+      phoneNumber: '',
+      email: '',
+      location: '',
+      nameOfSite: '',
+      flatno: '',
+      flatType: '',
+      password: '',
+    });
+  }
   const handleSignUp = async () => {
     setLoading(true);
 
-    // Validation
-    if (!form.email || !form.password || !form.name || !form.phoneNumber) {
+    if (!form.email || !form.password || !form.name || !form.phoneNumber || !form.location || !form.nameOfSite || !form.flatno || !form.flatType) {
       Alert.alert('Error', 'Please fill all required fields.');
       setLoading(false);
       return;
     }
 
+    if (!validatePhoneNumber(form.phoneNumber)) {
+      Alert.alert('Error', 'Please enter a valid 10-digit phone number');
+      return;
+    }
+
     try {
-      // Step 1: Create a new user in Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
@@ -45,7 +65,6 @@ const SignUpAsCustomer = () => {
 
       const userId = authData?.user?.id;
 
-      // Step 2: Insert customer details into the "customer" table
       const { error: dbError } = await supabase.from('customer').insert([
         {
           user_id: userId,
@@ -65,22 +84,16 @@ const SignUpAsCustomer = () => {
         return;
       }
 
-      setForm({
-        name: '',
-        phoneNumber: '',
-        email: '',
-        location: '',
-        nameOfSite: '',
-        flatno: '',
-        flatType: '',
-        password: '',
-      });
+      Alert.alert('Success', 'Account created successfully! Please check your email to verify your account.');
+      router.push("/login");
+      resetForm();
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
