@@ -1,27 +1,63 @@
-import { View, Text, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { Link } from 'expo-router';
+import { supabase } from '../../lib/superbase';
 
 const Login = () => {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+
+    // Validation
+    if (!form.email || !form.password) {
+      Alert.alert('Error', 'Please fill all the fields.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Supabase Auth - Sign In
+      const { error } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (error) {
+        Alert.alert('Login Failed', error.message);
+        setLoading(false);
+        return;
+      }
+
+      // Successful Login
+      Alert.alert('Success', 'Logged in successfully!');
+      // Redirect or navigate to the desired page (e.g., Dashboard)
+
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView className="bg-primary h-full">
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View className="bg-white w-full justify-center flex-1 px-4 my-6">
-
             <Text className="text-secondary text-3xl font-extrabold">
-              Welcom Back To Vastu360
+              Welcome Back To Vastu360
             </Text>
 
-            {/*Email Input Section*/}
+            {/* Email Input Section */}
             <FormField
               title="Email"
               value={form.email}
@@ -32,7 +68,7 @@ const Login = () => {
               placeholder="Enter Your Email"
             />
 
-            {/*Password Input Section*/}
+            {/* Password Input Section */}
             <FormField
               title="Password"
               value={form.password}
@@ -44,12 +80,14 @@ const Login = () => {
             />
 
             <CustomButton
-              title="Log In"
+              title={loading ? 'Logging In...' : 'Log In'}
               containerStyle="bg-secondary rounded-full mt-10 h-12"
               textStyle="text-lg text-white"
+              onPress={handleLogin}
+              disabled={loading}
             />
 
-            {/*Footer Section*/}
+            {/* Footer Section */}
             <View className="flex justify-center pt-5 flex-row gap-2">
               <Text className="text-lg text-black font-regular">
                 Don't have an account?
@@ -69,4 +107,4 @@ const Login = () => {
   );
 };
 
-export default Login
+export default Login;

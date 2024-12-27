@@ -1,10 +1,10 @@
-import { View, Text, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
 import { Link } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
-
+import { supabase } from '../../lib/superbase';
 
 const SignUpAsCustomer = () => {
   const [form, setForm] = useState({
@@ -12,18 +12,81 @@ const SignUpAsCustomer = () => {
     phoneNumber: '',
     email: '',
     location: '',
-    nameOfSite:'',
+    nameOfSite: '',
     flatno: '',
-    flattype: '',
+    flatType: '',
     password: '',
   });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = async () => {
+    setLoading(true);
+
+    // Validation
+    if (!form.email || !form.password || !form.name || !form.phoneNumber) {
+      Alert.alert('Error', 'Please fill all required fields.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Step 1: Create a new user in Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (authError) {
+        Alert.alert('Sign-Up Failed', authError.message);
+        setLoading(false);
+        return;
+      }
+
+      const userId = authData?.user?.id;
+
+      // Step 2: Insert customer details into the "customer" table
+      const { error: dbError } = await supabase.from('customer').insert([
+        {
+          user_id: userId,
+          name: form.name,
+          phone_number: form.phoneNumber,
+          email: form.email,
+          location: form.location,
+          name_of_site: form.nameOfSite,
+          flat_no: form.flatno,
+          flat_type: form.flatType,
+        },
+      ]);
+
+      if (dbError) {
+        Alert.alert('Error', 'Failed to save customer details: ' + dbError.message);
+        setLoading(false);
+        return;
+      }
+
+      setForm({
+        name: '',
+        phoneNumber: '',
+        email: '',
+        location: '',
+        nameOfSite: '',
+        flatno: '',
+        flatType: '',
+        password: '',
+      });
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView className="bg-primary h-full">
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <View className="w-full justify-center flex-1 px-4 my-6 bg-white" style={{ borderBottomColor: "#000" }}>
-
+          <View className="w-full justify-center flex-1 px-4 my-6 bg-white" style={{ borderBottomColor: '#000' }}>
             <Text className="text-secondary text-2xl font-semibold ">
               Sign Up To Vastu360 As Customer
             </Text>
@@ -44,7 +107,7 @@ const SignUpAsCustomer = () => {
               otherStyles="mt-6"
               keyboardType="phone-pad"
               textStyle="text-base text-gray-500 font-medium"
-              placeholder="Enter Your Phone Number of 10 digit"
+              placeholder="Enter Your Phone Number"
             />
 
             <FormField
@@ -74,15 +137,15 @@ const SignUpAsCustomer = () => {
               textStyle="text-base text-gray-500 font-medium"
               placeholder="Enter Your Site Name"
             />
-            
+
             <FormField
-            title="Flat Type"
-            value={form.flattype}
-            handleChangeText={(e) => setForm({ ...form, flattype: e })}
-            otherStyles="mt-6"
-            textStyle="text-base text-gray-500 font-medium"
-            placeholder="Enter Your Flat Type"
-          />
+              title="Flat Type"
+              value={form.flatType}
+              handleChangeText={(e) => setForm({ ...form, flatType: e })}
+              otherStyles="mt-6"
+              textStyle="text-base text-gray-500 font-medium"
+              placeholder="Enter Your Flat Type"
+            />
 
             <FormField
               title="Flat No."
@@ -103,14 +166,16 @@ const SignUpAsCustomer = () => {
             />
 
             <CustomButton
-              title="Sign Up As Customer"
-              containerStyle="bg-secondary rounded-full mt-5 h-12"
+              title={loading ? 'Signing Up...' : 'Sign Up As Customer'}
+              containerStyle="bg-secondary rounded-full mt-6 h-12"
               textStyle="text-lg text-white"
+              onPress={handleSignUp}
+              disabled={loading}
             />
 
             <View className="justify-center pt-5 flex-row gap-2">
               <Text className="text-lg font-regular text-gray-500">
-                Sign Up As builder?{' '}
+                Sign Up As Builder?{' '}
                 <Link className="text-secondary-100 text-lg font-semibold" href="/sign-up-as-builder">
                   SignUp
                 </Link>
@@ -125,7 +190,6 @@ const SignUpAsCustomer = () => {
                 </Link>
               </Text>
             </View>
-
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -133,5 +197,4 @@ const SignUpAsCustomer = () => {
   );
 };
 
-
-export default SignUpAsCustomer
+export default SignUpAsCustomer;

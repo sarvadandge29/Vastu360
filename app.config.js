@@ -1,4 +1,6 @@
-{
+import 'dotenv/config'
+
+export default {
   "expo": {
     "name": "Vastu360",
     "slug": "Vastu360",
@@ -36,6 +38,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra" : {
+      projectId : process.env.SUPABASE_PROJECT_ID,
+      supabaseUrl : process.env.SUPABASE_URL,
+      supabaseKey : process.env.SUPABASE_KEY,
     }
   }
 }
