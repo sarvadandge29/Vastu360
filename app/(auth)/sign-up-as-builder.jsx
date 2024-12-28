@@ -76,7 +76,6 @@ const SignUpAsBuilder = () => {
         return;
       }
 
-      Alert.alert('Success', 'Account created successfully! Please check your email to verify your account.');
       router.push("/login");
       resetForm();
     } catch (error) {

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { supabase } from '../../lib/superbase';
 
 const Login = () => {
@@ -13,11 +13,11 @@ const Login = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async () => {
     setLoading(true);
 
-    // Validation
     if (!form.email || !form.password) {
       Alert.alert('Error', 'Please fill all the fields.');
       setLoading(false);
@@ -25,25 +25,45 @@ const Login = () => {
     }
 
     try {
-      // Supabase Auth - Sign In
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: form.email,
         password: form.password,
       });
 
-      if (error) {
-        Alert.alert('Login Failed', error.message);
+      if (authError) {
+        Alert.alert('Login Failed', authError.message);
         setLoading(false);
         return;
       }
 
-      // Successful Login
-      Alert.alert('Success', 'Logged in successfully!');
-      // Redirect or navigate to the desired page (e.g., Dashboard)
+      const { data, error: fetchError } = await supabase
+        .from('builder')
+        .select('*')
+        .eq('email', form.email)
+        .single();
+
+      if (fetchError) {
+        const { data: customerData, error: customerError } = await supabase
+          .from('customer')
+          .select('*')
+          .eq('email', form.email)
+          .single();
+
+        if (customerError) {
+          Alert.alert('Error', 'User not found.');
+          setLoading(false);
+          return;
+        }
+
+        router.push('/customer-home');
+        setLoading(false);
+      } else {
+        router.push('/builder-home');
+        setLoading(false);
+      }
 
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
