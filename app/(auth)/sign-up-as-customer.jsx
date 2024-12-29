@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
-import { Link } from 'expo-router';
+import { Link , router} from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import { supabase } from '../../lib/superbase';
 
@@ -84,7 +84,7 @@ const SignUpAsCustomer = () => {
         return;
       }
 
-      router.push("/login");
+      router.push("/customerHome");
       resetForm();
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');

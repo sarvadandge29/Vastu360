@@ -76,7 +76,7 @@ const SignUpAsBuilder = () => {
         return;
       }
 
-      router.push("/login");
+      router.push("/builderHome");
       resetForm();
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');

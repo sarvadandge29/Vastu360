@@ -25,7 +25,7 @@ const Index = () => {
             title="Continue With Email"
             style="bg-white h-14"
             textStyle="text-lg text-primary"
-            onPress={() => router.push("/customer")}
+            onPress={() => router.push("/login")}
           />
           <StatusBar backgroundColor="#112D4E" barStyle="light-content"/>
         </View>
