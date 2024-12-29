@@ -7,7 +7,7 @@ import { router } from "expo-router";
 const Index = () => {
   return (
     <View className="flex-1 bg-white">
-      <View className="flex-1 justify-center items-center bg-white">
+      <View className="flex-1 justify-center items-center bg-F9F7F7">
         <Image source={images.homeImage} />
       </View>
 
@@ -25,9 +25,9 @@ const Index = () => {
             title="Continue With Email"
             style="bg-white h-14"
             textStyle="text-lg text-primary"
-            onPress={() => router.push("/login")}
+            onPress={() => router.push("/customer")}
           />
-          <StatusBar backgroundColor="#2D487A" barStyle="light-content"/>
+          <StatusBar backgroundColor="#112D4E" barStyle="light-content"/>
         </View>
       </View>
     </View>
