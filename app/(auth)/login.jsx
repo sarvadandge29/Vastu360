@@ -55,10 +55,10 @@ const Login = () => {
           return;
         }
 
-        router.push('/customer-home');
+        router.push('/customerHome');
         setLoading(false);
       } else {
-        router.push('/builder-home');
+        router.push('/builderHome');
         setLoading(false);
       }
 

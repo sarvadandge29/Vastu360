@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Image, StatusBar } from "react-native";
 import CustomButton from "../components/CustomButton";
 import images from "../constants/images";
 import { router } from "expo-router";
+import { SupabaseContext } from "../context/SupabaseContext";
 
 const Index = () => {
+  const { supabase, session } = useContext(SupabaseContext);
+
+  // Use the Supabase client and session
+  supabase.auth.getUser().then(({ data: { user } }) => {
+    console.log(user);
+  });
+
+  
   return (
     <View className="flex-1 bg-white">
       <View className="flex-1 justify-center items-center bg-F9F7F7">
