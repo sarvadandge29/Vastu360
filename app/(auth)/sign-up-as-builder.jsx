@@ -61,6 +61,22 @@ const SignUpAsBuilder = () => {
 
       const userId = authData?.user?.id;
 
+      if (!userId) {
+        Alert.alert('Error', 'User ID not found');
+        return;
+      }
+
+      if (updateError) {
+        Alert.alert('Error', 'Failed to update display name: ' + updateError.message);
+        return;
+      }
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: {
+          display_name: form.name,
+        },
+      });
+
       const { error: dbError } = await supabase.from('builder').insert([
         {
           user_id: userId,

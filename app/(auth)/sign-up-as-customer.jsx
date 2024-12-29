@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
-import { Link , router} from 'expo-router';
+import { Link, router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import { supabase } from '../../lib/superbase';
 
@@ -25,7 +25,7 @@ const SignUpAsCustomer = () => {
     return phoneRegex.test(phoneNumber);
   };
 
-  const resetForm = () =>{
+  const resetForm = () => {
     setForm({
       name: '',
       phoneNumber: '',
@@ -48,6 +48,7 @@ const SignUpAsCustomer = () => {
 
     if (!validatePhoneNumber(form.phoneNumber)) {
       Alert.alert('Error', 'Please enter a valid 10-digit phone number');
+      setLoading(false);  // Ensure loading is set to false here
       return;
     }
 
@@ -59,35 +60,47 @@ const SignUpAsCustomer = () => {
 
       if (authError) {
         Alert.alert('Sign-Up Failed', authError.message);
-        setLoading(false);
         return;
       }
 
       const userId = authData?.user?.id;
 
-      const { error: dbError } = await supabase.from('customer').insert([
-        {
-          user_id: userId,
-          name: form.name,
-          phone_number: form.phoneNumber,
-          email: form.email,
-          location: form.location,
-          name_of_site: form.nameOfSite,
-          flat_no: form.flatno,
-          flat_type: form.flatType,
+      if (!userId) {
+        Alert.alert('Error', 'User ID not found');
+        return;
+      }
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: {
+          display_name: form.name,
         },
-      ]);
+      });
+
+      if (updateError) {
+        Alert.alert('Error', 'Failed to update display name: ' + updateError.message);
+        return;
+      }
+
+      const { error: dbError } = await supabase.from('customer').insert([{
+        user_id: userId,
+        name: form.name,
+        phone_number: form.phoneNumber,
+        email: form.email,
+        location: form.location,
+        name_of_site: form.nameOfSite,
+        flat_no: form.flatno,
+        flat_type: form.flatType,
+      }]);
 
       if (dbError) {
         Alert.alert('Error', 'Failed to save customer details: ' + dbError.message);
-        setLoading(false);
         return;
       }
 
       router.push("/customerHome");
       resetForm();
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
+      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
