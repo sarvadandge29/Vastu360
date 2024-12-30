@@ -1,19 +1,19 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-
+import React from 'react';
 import "../global.css";
 import { Stack } from 'expo-router';
+import { AuthProvider } from '../context/AuthContext';
 
 const RootLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen name='index' options={{ headerShown: false }} />
-      <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-      <Stack.Screen name='(customerTabs)' options={{ headerShown: false }} />
-      <Stack.Screen name='(builderTabs)' options={{ headerShown: false }} />
-    </Stack>
+    <AuthProvider>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(customerTabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(builderTabs)" options={{ headerShown: false }} />
+      </Stack>
+    </AuthProvider>
+  );
+};
 
-  )
-}
-
-export default RootLayout
+export default RootLayout;

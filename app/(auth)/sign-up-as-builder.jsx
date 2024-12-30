@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
-import { Link, router } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import { supabase } from '../../lib/superbase';
 
@@ -14,6 +14,7 @@ const SignUpAsBuilder = () => {
     nameOfCompany: '',
     password: '',
   });
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
@@ -74,6 +75,11 @@ const SignUpAsBuilder = () => {
       const { error: updateError } = await supabase.auth.updateUser({
         data: {
           display_name: form.name,
+          options: {
+            data: {
+              user_type: "builder"
+            },
+          }
         },
       });
 
@@ -84,6 +90,7 @@ const SignUpAsBuilder = () => {
           phone_number: form.phoneNumber,
           email: form.email,
           name_of_company: form.nameOfCompany,
+          userType: "builder"
         },
       ]);
 

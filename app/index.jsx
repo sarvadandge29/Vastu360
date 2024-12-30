@@ -1,10 +1,33 @@
-import React, { useContext } from "react";
-import { View, Text, Image, StatusBar } from "react-native";
+import { View, Text, Image, StatusBar, ActivityIndicator } from "react-native";
 import CustomButton from "../components/CustomButton";
 import images from "../constants/images";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
+import { useAuth } from "../context/AuthContext";
 
 const Index = () => {
+  const { user, userType ,loading } = useAuth();
+
+  const router = useRouter();
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#112D4E" />
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (userType === "customer") {
+    router.push("/customerHome");
+    return null;
+  }
+
+  if (userType === "builder") {
+    router.push("/builderHome");
+    return null;
+  }
+  
   return (
     <View className="flex-1 bg-white">
       <View className="flex-1 justify-center items-center bg-F9F7F7">
