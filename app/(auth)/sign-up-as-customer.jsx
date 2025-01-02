@@ -89,7 +89,7 @@ const SignUpAsCustomer = () => {
       }
 
       const { error: dbError } = await supabase.from('customer').insert([{
-        user_id: userId,
+        userId: userId,
         name: form.name,
         phone_number: form.phoneNumber,
         email: form.email,

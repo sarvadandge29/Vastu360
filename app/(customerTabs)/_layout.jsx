@@ -5,12 +5,12 @@ import icons from '../../constants/icons';
 
 const TabIcon = ({ icon, color, name, focused }) => {
     return (
-        <View className="items-center justify-center gap-y-1 flex-column" style={{paddingTop : 28}}>
+        <View className="items-center justify-center gap-y-1 flex-column" style={{ paddingTop: 28 }}>
             <Image
                 source={icon}
                 resizeMode="contain"
                 tintColor={color}
-                style={{width : 36, height : 36}}
+                style={{ width: 36, height: 36 }}
             />
             <Text
                 className={`${focused ? 'font-semibold' : 'font-normal'} w-full`}
@@ -45,6 +45,17 @@ const CustomerTabLayout = () => {
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon icon={icons.home} color={color} name="Home" focused={focused} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
+                name="customerChat"
+                options={{
+                    title: "Chat",
+                    headerShown: false,
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon icon={icons.chat} color={color} name="Chat" focused={focused} />
                     ),
                 }}
             />
