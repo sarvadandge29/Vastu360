@@ -9,7 +9,7 @@ const RootLayout = () => {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(customerTabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(customerDrawer)" options={{ headerShown: false }} />
         <Stack.Screen name="(builderTabs)" options={{ headerShown: false }} />
       </Stack>
     </AuthProvider>
