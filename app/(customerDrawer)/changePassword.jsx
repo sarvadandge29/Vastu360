@@ -76,7 +76,7 @@ export default function ChangePassword() {
             />
             <CustomButton
                 title={loading ? "Changing..." : "Proceed"}
-                // onPress={handleChangePassword}
+                onPress={handleChangePassword}
                 containerStyle="bg-secondary py-3 rounded-full mt-6"
                 textStyle="text-white"
                 disable={loading}

@@ -24,6 +24,7 @@
     "@supabase/supabase-js": "^2.47.10",
     "aes-js": "^3.1.2",
     "dotenv": "^16.4.7",
+    "emailjs-com": "^3.2.0",
     "expo": "~52.0.20",
     "expo-blur": "~14.0.1",
     "expo-constants": "~17.0.3",
