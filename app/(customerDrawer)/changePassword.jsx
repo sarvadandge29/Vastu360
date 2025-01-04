@@ -9,6 +9,7 @@ export default function ChangePassword() {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [loading, setLoading] = useState(false)
     const { user } = useAuth();
     const handleChangePassword = async () => {
         if (!currentPassword || !newPassword || !confirmNewPassword) {
@@ -22,7 +23,7 @@ export default function ChangePassword() {
         }
 
         try {
-
+            setLoading(true);
             if (!user) {
                 Alert.alert('Error', 'User not authenticated.');
                 return;
@@ -46,6 +47,8 @@ export default function ChangePassword() {
             Alert.alert('Success', 'Password changed successfully!');
         } catch (error) {
             Alert.alert('Error', error.message || 'Something went wrong.');
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -72,10 +75,11 @@ export default function ChangePassword() {
                 title=""
             />
             <CustomButton
-                title="Proceed"
-                onPress={handleChangePassword}
+                title={loading ? "Changing..." : "Proceed"}
+                // onPress={handleChangePassword}
                 containerStyle="bg-secondary py-3 rounded-full mt-6"
                 textStyle="text-white"
+                disable={loading}
             />
         </View>
     );
