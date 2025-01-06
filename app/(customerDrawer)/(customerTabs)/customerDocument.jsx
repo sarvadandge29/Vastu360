@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const CustomerProfile = () => {
+const CustomerDocument = () => {
   return (
     <View>
-      <Text> CustomerProfile</Text>
+      <Text>CustomerDocument</Text>
     </View>
   )
 }
 
-export default CustomerProfile
+export default CustomerDocument

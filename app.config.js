@@ -44,6 +44,9 @@ export default {
       projectId : process.env.SUPABASE_PROJECT_ID,
       supabaseUrl : process.env.SUPABASE_URL,
       supabaseKey : process.env.SUPABASE_KEY,
+      emailjsServiceId:process.env.EMAILJS_SERVICE_ID,
+      emailjsTemplateId:process.env.EMAILJS_TEMPLATE_ID,
+      emailjsPublicKey:process.env.EMAILJS_PUBLIC_KEY,
     }
   }
 }

@@ -50,6 +50,17 @@ const CustomerTabLayout = () => {
             />
 
             <Tabs.Screen
+                name="customerDocument"
+                options={{
+                    title: "Document",
+                    headerShown: false,
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon icon={icons.document} color={color} name="Document" focused={focused} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
                 name="customerChat"
                 options={{
                     title: "Chat",
@@ -61,12 +72,23 @@ const CustomerTabLayout = () => {
             />
 
             <Tabs.Screen
-                name="customerProfile"
+                name="customerInteriorWork"
                 options={{
-                    title: "Profile",
+                    title: "Interior Work",
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
-                        <TabIcon icon={icons.profile} color={color} name="Profile" focused={focused} />
+                        <TabIcon icon={icons.interiorWork} color={color} name="Interior Work" focused={focused} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
+                name="customerUpdates"
+                options={{
+                    title: "Construction Updates",
+                    headerShown: false,
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon icon={icons.updateIcon} color={color} name="Updates" focused={focused} />
                     ),
                 }}
             />

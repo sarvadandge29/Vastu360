@@ -1,5 +1,6 @@
 import { Drawer } from 'expo-router/drawer';
-import { DrawerToggleButton } from '@react-navigation/drawer';
+import { DrawerItem, DrawerToggleButton } from '@react-navigation/drawer';
+import { Alert } from 'react-native';
 
 export default function Layout() {
   return (
@@ -27,12 +28,8 @@ export default function Layout() {
         options={{ drawerLabel: 'Home' }}
       />
       <Drawer.Screen
-      name='resetPassword'
-      options={{ drawerLabel: 'Reset Password' }}
-      />
-      <Drawer.Screen
-      name='changePassword'
-      options={{ drawerLabel: 'Change Password' }}
+        name='(settings)'
+        options={{ drawerLabel: 'Settings' }}
       />
     </Drawer>
   );
