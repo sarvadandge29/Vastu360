@@ -90,7 +90,6 @@ const SignUpAsBuilder = () => {
           phone_number: form.phoneNumber,
           email: form.email,
           name_of_company: form.nameOfCompany,
-          userType: "builder"
         },
       ]);
 

@@ -50,7 +50,7 @@ const CustomerTabLayout = () => {
             />
 
             <Tabs.Screen
-                name="customerDocument"
+                name="(customerDocument)"
                 options={{
                     title: "Document",
                     headerShown: false,

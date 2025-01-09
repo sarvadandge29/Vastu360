@@ -4,7 +4,6 @@ import { supabase } from '../../../lib/superbase';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../../context/AuthContext';
 import icons from '../../../constants/icons';
-// import { Image } from 'react-native';
 
 const Settings = () => {
   const router = useRouter();

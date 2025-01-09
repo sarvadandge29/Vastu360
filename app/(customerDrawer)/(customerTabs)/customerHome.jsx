@@ -17,7 +17,7 @@ const CustomerHome = () => {
       {/* Header Section */}
       <View className="bg-primary py-4 px-4">
         <Text className="text-white font-medium text-4xl">
-          Hi {user.name}
+          Hi {user?.name}
         </Text>
         <Text className="text-white text-xl pt-2">
           Welcome to Your Smart Home
