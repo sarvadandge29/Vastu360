@@ -22,20 +22,18 @@ export const AuthProvider = ({ children }) => {
         setSession(currentSession);
 
         if (currentSession?.user?.user_metadata?.user_type === "customer") {
-          // Fetch customer data for customer user_type
           const { data: customerData, error: customerError } = await supabase
-            .from("customer") // Replace with your actual collection name
+            .from("customer") 
             .select("*")
-            .eq("id", currentSession.user.id) // Match by user ID
-            .single(); // Fetch single record
+            .eq("id", currentSession.user.id)
+            .single();
 
           if (customerError) {
             console.error("Error fetching customer data:", customerError.message);
           } else {
-            setUser(customerData); // Set the user state as customer data
+            setUser(customerData);
           }
         } else {
-          // Set the user as the basic session user for non-customer types
           setUser(currentSession?.user ?? null);
         }
       }
@@ -51,7 +49,6 @@ export const AuthProvider = ({ children }) => {
       const user_type = session?.user?.user_metadata?.options?.data?.user_type
 
       if (user_type === "customer") {
-        // Fetch customer data when auth state changes
         supabase
           .from("customer")
           .select("*")

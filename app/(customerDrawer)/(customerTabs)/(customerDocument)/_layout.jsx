@@ -5,6 +5,7 @@ const CustomerDocumentLayout = () => {
     return (
         <Stack>
             <Stack.Screen name='customerDocument' options={{ headerShown: false }} />
+            <Stack.Screen name='builderDocument' options={{ headerShown: false }} />
         </Stack>
     )
 }

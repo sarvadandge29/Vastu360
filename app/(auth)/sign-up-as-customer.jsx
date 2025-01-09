@@ -97,6 +97,7 @@ const SignUpAsCustomer = () => {
         name_of_site: form.nameOfSite,
         flat_no: form.flatno,
         flat_type: form.flatType,
+        document_upload : false,
       }]);
 
       if (dbError) {
