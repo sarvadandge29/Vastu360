@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const BuilderTabsLayout = () => {
+const BuilderInteriorWork = () => {
   return (
     <View>
-      <Text>BuilderTabsLayout</Text>
+      <Text>BuilderInteriorWork</Text>
     </View>
   )
 }
 
-export default BuilderTabsLayout
+export default BuilderInteriorWork

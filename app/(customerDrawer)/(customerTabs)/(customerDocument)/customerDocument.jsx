@@ -1,7 +1,6 @@
-import { View, Text, Button, Alert, SafeAreaView, ScrollView, ActivityIndicator, Pressable, Linking } from 'react-native';
+import { View, Text, Button, Alert, SafeAreaView, ScrollView, ActivityIndicator, Linking } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
 import { supabase } from '../../../../lib/superbase';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DocumentCard from '../../../../components/DocumentCard';
@@ -82,7 +81,6 @@ const CustomerDocument = () => {
             loanDisburesmentStatementUri: data[0].loanDisburesmentStatement,
             payemntReceiptUri: data[0].payemntReceipt,
           });
-          console.log(form)
         }
       } catch (error) {
         console.error("Error fetching file data:", error.message);
@@ -233,7 +231,7 @@ const CustomerDocument = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView className="h-full px-2">
+      <SafeAreaView className="h-full px-2 bg-white">
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           {isUploaded ? (
             <>
@@ -241,7 +239,7 @@ const CustomerDocument = () => {
               <DocumentCard
                 buttonTittle="View"
                 documentType="Address Proof"
-                onPress={() => { () => viewDocument(form.addressProofUri) }}
+                onPress={() => viewDocument(form.addressProofUri)}
                 selectedFileName={fileData?.addressProof?.split('/').pop()}
               />
               <DocumentCard
