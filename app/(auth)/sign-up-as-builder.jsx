@@ -1,17 +1,20 @@
 import { View, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FormField from '../../components/FormField';
 import { Link, useRouter } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import { supabase } from '../../lib/superbase';
+import { Picker } from '@react-native-picker/picker';
 
 const SignUpAsBuilder = () => {
+  const [companies, setCompanies] = useState([]);
   const [form, setForm] = useState({
     name: '',
     phoneNumber: '',
     email: '',
     nameOfCompany: '',
+    companyId: '',
     password: '',
   });
   const router = useRouter();
@@ -27,6 +30,22 @@ const SignUpAsBuilder = () => {
       password: '',
     });
   };
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const { data, error } = await supabase.from('companies').select('company_name,company_id');
+        if (error) {
+          Alert.alert('Error', 'Failed to fetch companies: ' + error.message);
+        } else {
+          setCompanies(data || []);
+        }
+      } catch (err) {
+        Alert.alert('Error', 'Something went wrong while fetching companies.');
+      }
+    };
+    fetchCompanies();
+  }, []);
 
   const validateForm = () => {
     const phoneRegex = /^[0-9]{10}$/;
@@ -90,6 +109,7 @@ const SignUpAsBuilder = () => {
           phone_number: form.phoneNumber,
           email: form.email,
           name_of_company: form.nameOfCompany,
+          company_id : form.companyId
         },
       ]);
 
@@ -143,14 +163,26 @@ const SignUpAsBuilder = () => {
               placeholder="Enter Your Email"
             />
 
-            <FormField
-              title="Name Of Company"
-              value={form.nameOfCompany}
-              handleChangeText={(e) => setForm({ ...form, nameOfCompany: e })}
-              otherStyles="mt-6"
-              textStyle="text-base text-gray-500 font-medium"
-              placeholder="Enter Your Company Name"
-            />
+            <Text className="text-base text-gray-500 font-medium mt-6">Select Your Company</Text>
+            <View className="h-16 px-4 flex-row items-center rounded-full" style={{ backgroundColor: '#D9D9D9' }}>
+              <Picker
+                selectedValue={form.nameOfCompany}
+                onValueChange={(itemValue) => setForm({ ...form, nameOfCompany: itemValue.company_name, companyId: itemValue.company_id })}
+                style={{ flex: 1, color: '#7b7b8b' }}
+                dropdownIconColor="#7b7b8b" w
+              >
+                <Picker.Item label="Select a company" value="" style={{ fontWeight: '600' }} />
+                {companies.map((company, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={company.company_name}
+                    value={company}
+                    style={{ fontWeight: '600' }}
+                  />
+                ))}
+              </Picker>
+            </View>
+
 
             <FormField
               title="Password"
@@ -166,6 +198,7 @@ const SignUpAsBuilder = () => {
               containerStyle="bg-secondary rounded-full mt-5 h-12"
               textStyle="text-lg text-white"
               onPress={handleSignUp}
+              // onPress={() => console.log(`${form.nameOfCompany}  ${form.companyId}`)}
               disable={loading}
             />
 

@@ -1,8 +1,7 @@
 import { Drawer } from 'expo-router/drawer';
-import { DrawerItem, DrawerToggleButton } from '@react-navigation/drawer';
-import { Alert } from 'react-native';
+import { DrawerToggleButton } from '@react-navigation/drawer';
 
-export default function Layout() {
+export default function CustomerDrawerLayout() {
   return (
     <Drawer
       screenOptions={{
