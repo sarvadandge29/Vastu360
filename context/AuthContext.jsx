@@ -21,63 +21,63 @@ export const AuthProvider = ({ children }) => {
         const currentSession = sessionData.session;
         setSession(currentSession);
 
-        if (currentSession?.user?.user_metadata?.user_type === "customer") {
-          const { data: customerData, error: customerError } = await supabase
-            .from("customer") 
-            .select("*")
-            .eq("id", currentSession.user.id)
-            .single();
-
-          if (customerError) {
-            console.error("Error fetching customer data:", customerError.message);
-          } else {
-            setUser(customerData);
-          }
-        } else {
-          setUser(currentSession?.user ?? null);
+        if (currentSession?.user) {
+          setTimeout(() =>{
+            fetchUser(currentSession.user);
+          },3000)
         }
       }
 
       setLoading(false);
     };
 
+    const fetchUser = async (user) => {
+      if (!user) return;
+
+      const userType = user?.user_metadata?.options?.data?.user_type;
+
+      if (userType === "customer") {
+        const { data, error } = await supabase
+          .from("customer")
+          .select("*")
+          .eq("userId", user.id)
+          .limit(1);
+
+        if (error) {
+          console.error("Error fetching customer data:", error.message);
+        } else if (data?.length > 0) {
+          setUserType("customer");
+          setUser(data[0]);
+        } else {
+          console.log("No customer found 45.");
+        }
+      } else if (userType === "builder") {
+        const { data, error } = await supabase
+          .from("builder")
+          .select("*")
+          .eq("userId", user.id);
+
+        if (error) {
+          console.error("Error fetching builder data:", error.message);
+        } else {
+          setUserType("builder");
+          setUser(data[0]);
+        }
+      }
+    };
+
     fetchSessionAndUser();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-
-      const user_type = session?.user?.user_metadata?.options?.data?.user_type
-
-      if (user_type === "customer") {
-        supabase
-          .from("customer")
-          .select("*")
-          .eq("userId", session.user.id)
-          .single()
-          .then(({ data, error }) => {
-            if (error) {
-              console.error("Error fetching customer data on state change:", error.message);
-            } else {
-              setUserType("customer")
-              setUser(data);
-            }
-          });
-      } else if (user_type === "builder") {
-        supabase
-          .from("builder")
-          .select("*")
-          .eq("userId", session.user.id)
-          .single()
-          .then(({ data, error }) => {
-            if (error) {
-              console.error("Error fetching builder data on state change:", error.message);
-            } else {
-              setUserType("builder")
-              setUser(data);
-            }
-          });
-        }
-        setUser(session?.user ?? null);
+      if (session?.user) {
+        setTimeout(() => {
+          fetchUser(session.user);
+        }, 3000);
+      } else {
+        setUser(null);
+        setUserType(null);
+      }
     });
 
     return () => {

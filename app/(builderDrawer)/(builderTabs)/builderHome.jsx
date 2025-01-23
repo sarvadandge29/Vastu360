@@ -7,7 +7,6 @@ import { FlatList } from 'react-native-gesture-handler';
 import SitesCard from '../../../components/SitesCard';
 
 const BuilderHome = () => {
-  const { selectedSite, updateState } = useStore();
   const [sitesData, setSitesData] = useState([]);
   const { user } = useAuth();
 
@@ -46,11 +45,6 @@ const BuilderHome = () => {
         renderItem={({ item }) => (
           <SitesCard data={item} />
         )}
-      />
-
-      <Button
-        title="Log Sites Data"
-        onPress={() => console.log(selectedSite)}
       />
     </View>
   );

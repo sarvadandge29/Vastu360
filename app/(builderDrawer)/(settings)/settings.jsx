@@ -29,43 +29,6 @@ const Settings = () => {
     );
   };
 
-  const handleDeleteAccount = () => {
-    Alert.alert(
-      'Delete Account',
-      'Are you sure you want to delete your account? This action cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete', onPress: async () => {
-            try {
-              const { error: deleteCustomerError } = await supabase
-                .from('customer')
-                .delete()
-                .eq('userId', user.userId);
-
-              if (deleteCustomerError) {
-                Alert.alert('Error', 'Failed to delete your data from the customer table.');
-                return;
-              }
-
-              const { error: deleteAuthError } = await supabase.auth.api.deleteUser(user.userId);
-              if (deleteAuthError) {
-                Alert.alert('Error', 'Failed to delete the account from authentication system.');
-                return;
-              }
-
-              Alert.alert('Success', 'Your account has been deleted.');
-              router.push('/login');
-            } catch (error) {
-              console.error('Error deleting account:', error);
-              Alert.alert('Error', 'An unexpected error occurred while deleting your account.');
-            }
-          }
-        },
-      ]
-    );
-  };
-
   return (
     <View className="flex-1 p-5">
       <Text className="text-3xl font-bold mb-4 pb-1 border-b-2 border-slate-500">Settings</Text>
@@ -103,15 +66,6 @@ const Settings = () => {
       >
         <View className="justify-center items-center flex-row">
           <Text className="text-2xl font-semibold">Update Email</Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        className="py-2 mb-4 flex-row"
-        onPress={handleDeleteAccount}
-      >
-        <View className="justify-center items-center flex-row">
-          <Text className="text-2xl font-semibold">Delete Account</Text>
         </View>
       </TouchableOpacity>
 

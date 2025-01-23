@@ -109,7 +109,7 @@ const SignUpAsBuilder = () => {
           phone_number: form.phoneNumber,
           email: form.email,
           name_of_company: form.nameOfCompany,
-          company_id : form.companyId
+          company_id: form.companyId
         },
       ]);
 
@@ -117,9 +117,12 @@ const SignUpAsBuilder = () => {
         Alert.alert('Error', 'Failed to save builder details: ' + dbError.message);
         return;
       }
-
-      router.push("/builderHome");
-      resetForm();
+      
+      setTimeout(() => {
+        router.push("/builderHome");
+        resetForm();
+        setLoading(true);
+      }, 6000);
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
     } finally {
